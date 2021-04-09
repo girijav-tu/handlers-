@@ -1,0 +1,24 @@
+- name: Using handlers 
+- hosts: Myweb 
+  tasks:
+  - name: Installing httpd package 
+    package:
+            name: httpd
+            state: present 
+
+  - name: Copying file 
+    copy:
+            content: "The website is here.."
+            dest: /var/www/html/index.html
+
+  - name: Creating a template for configuration
+    template:
+            dest: /etc/httpd/conf.d/myfile.conf
+            src: myfile.conf.j2 
+    notify: Restart httpd
+
+  handlers:
+  - name: Restart httpd 
+    service:
+            name: httpd
+            state: restarted
